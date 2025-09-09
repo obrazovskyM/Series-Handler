@@ -1,0 +1,18 @@
+//В говнокоде и черт ногу сломит
+//Тут даже компилятор плакать будет
+/// //////////////////////////////////////////////////////////////////
+
+#include "UI.h"
+
+using namespace System;
+using namespace System::Windows::Forms;
+
+[STAThreadAttribute]
+
+int main() {
+	Application::EnableVisualStyles();
+	Application::SetCompatibleTextRenderingDefault(false);
+	SeriesHandler::UI ui;
+	Application::Run(% ui);
+}
+
