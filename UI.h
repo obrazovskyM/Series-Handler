@@ -1,7 +1,7 @@
 #pragma once
 #include "UI_result.h"
 #include "Dataset.h"
-#define version "v1.0"
+#define version "v1.2"
 
 namespace SeriesHandler {
 
@@ -14,19 +14,19 @@ namespace SeriesHandler {
 
 	/// //////////////////////////////////////////////////////////////////
 
-
 	public ref class UI : public System::Windows::Forms::Form
 	{
-#pragma region Form base
-	private: Dataset^ dataset;
+	/// //////////////////////////////////////////////////////////////////
+	#pragma region Form base
 
+	private: 
+		Dataset^ dataset;
 	public:
 		UI(void)
 		{
 			InitializeComponent();
 			dataset = gcnew Dataset();
 		}
-
 	protected:
 		~UI()
 		{
@@ -43,18 +43,17 @@ namespace SeriesHandler {
 	private: System::Windows::Forms::CheckBox^ checkBox_cut;
 
 
-
-
 	private: System::Windows::Forms::Button^ button1;
 	private: System::Windows::Forms::RadioButton^ radioButton_none;
 
 
 	private:
 		System::ComponentModel::Container ^components;
-#pragma endregion
 
 
+	#pragma endregion
 	/// //////////////////////////////////////////////////////////////////
+
 
 		void InitializeComponent(void)
 		{
@@ -205,12 +204,12 @@ namespace SeriesHandler {
 
 		}
 
+
 	/// //////////////////////////////////////////////////////////////////
 
 
 private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
 
-	//getting input data
 	dataset->Write(this->richTextBox1->Text);
 	SeriesHandler::UI_result ui_result;
 
@@ -227,7 +226,6 @@ private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e
 
 	/// //////////////////////////////////////////////////////////////////
 
-	//showing result
 	ui_result.write_result(dataset->Get());
 	dataset->Clear();
 	ui_result.ShowDialog();
