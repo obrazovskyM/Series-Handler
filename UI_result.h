@@ -9,13 +9,12 @@ namespace SeriesHandler {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
-
 	/// //////////////////////////////////////////////////////////////////
-
 
 	public ref class UI_result : public System::Windows::Forms::Form
 	{
-#pragma region Form base
+	/// //////////////////////////////////////////////////////////////////
+	#pragma region Form base
 	public:
 		UI_result(void)
 		{
@@ -30,10 +29,10 @@ namespace SeriesHandler {
 				delete components;
 			}
 		}
-#pragma endregion
+	#pragma endregion
 	/// //////////////////////////////////////////////////////////////////
+	#pragma region Form Components
 
-#pragma region Form Components
 	private: System::Windows::Forms::RichTextBox^ richTextBox1;
 	private:
 		System::ComponentModel::Container ^components;
@@ -66,16 +65,43 @@ namespace SeriesHandler {
 			this->ResumeLayout(false);
 
 		}
-#pragma endregion
+	#pragma endregion
 
 	/// //////////////////////////////////////////////////////////////////
 
 	public: void write_result(String^ value) {
 		this->richTextBox1->Clear();
 		this->richTextBox1->Text = value;
+		Selection_err();
+		Del_marks();
 		this->richTextBox1->Refresh();
 		}
 	private: System::Void richTextBox1_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+	}
+	private: System::Void Selection_err() {
+		int start = 0;
+		int end = 0;
+		for (int i = 0; i < this->richTextBox1->Text->Length; i++)
+			if (this->richTextBox1->Text[i] == '*') {
+				if (start == 0)
+					start = i;
+				else {
+					end = i;
+					this->richTextBox1->SelectionStart = start;
+					this->richTextBox1->SelectionLength = end - start + 1;
+					this->richTextBox1->SelectionBackColor = Color::Red;
+					start = 0;
+					end = 0;
+				}
+			}
+	}
+	private: System::Void Del_marks() {
+		for (int i = this->richTextBox1->Text->Length - 1; i >= 0; i--)
+			if (this->richTextBox1->Text[i] == '*') {
+				this->richTextBox1->SelectionStart = i;
+				this->richTextBox1->SelectionLength = 1;
+				this->richTextBox1->SelectedText = "";
+			}
 	}
 	};
 }
