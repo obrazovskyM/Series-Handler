@@ -5,10 +5,13 @@
 using namespace std;
 using namespace System;
 
+/// //////////////////////////////////////////////////////////////////
+
 
 ref class Dataset {
 
 /// //////////////////////////////////////////////////////////////////
+
 #pragma region Init
 
 public:
@@ -20,7 +23,9 @@ public:
 		length = 0;
 	}
 #pragma endregion
+
 /// //////////////////////////////////////////////////////////////////
+
 #pragma region UI functions
 
 	void Write(String^ value) {
@@ -54,7 +59,9 @@ public:
 	}
 
 #pragma endregion
+
 /// //////////////////////////////////////////////////////////////////
+
 #pragma region Procesing Functions
 
 	void Cut() {
@@ -98,10 +105,6 @@ public:
 		if (length <= 1)
 			return;
 
-
-		// 0 1 2 3 4 5     spr = 3
-		// A B C D 1 1
-
 		int separator = Get_separator(mass[0]);
 		if (separator >= mass[0].length())
 			return;
@@ -110,8 +113,6 @@ public:
 		Dataset new_dataset;
 
 		for (int i = 0; i < length - 1; i = i + 2) {
-
-			
 
 			if (i + 1 >= length)
 				return;
@@ -122,13 +123,31 @@ public:
 			string numpath = mass[i];
 			numpath = numpath.erase(0, separator + 1);
 
+			while ((numpath[0] == 48) && (numpath.length() > 1)) {
+				numpath.erase(0, 1);
+				wordpath = wordpath + "0";
+			}
+				
+
 			long long int numend = 0;
 			stringstream stream(numpath);
 			stream >> numend;
 
-			for (int x = 0; x <= insert; x++)
+			for (int x = 0; x <= insert; x++) {
 				new_dataset.Add(wordpath + to_string(numend + x));
-			
+				new_dataset.mass[new_dataset.length - 1];
+				while (new_dataset.mass[new_dataset.length - 1].length() - mass[i].length() != 0) {
+					if (new_dataset.mass[new_dataset.length - 1][separator + 1] == '0')
+						new_dataset.mass[new_dataset.length - 1] = new_dataset.mass[new_dataset.length - 1].erase(separator, 1);
+				}
+				
+			}
+			//check series
+			if (new_dataset.mass[new_dataset.length - 1] != mass[i + 1]) {
+				new_dataset.mass[new_dataset.length - 1] += "*";
+				new_dataset.mass[new_dataset.length - 1 - insert] = "*" + new_dataset.mass[new_dataset.length - 1 - insert];
+			}
+			//
 		}
 
 		mass = new_dataset.mass;
@@ -136,10 +155,6 @@ public:
 
 		return;
 	}
-
-
-
-
 
 #pragma endregion
 /// //////////////////////////////////////////////////////////////////
@@ -221,6 +236,25 @@ private:
 
 		return insert;
 	}
+	int digit(int value) {
+		int result = 0;
+		while (value > 0) {
+			value = value / 10;
+			result++;
+		}
+		return result;
+	}
+	void remove_digit(int index) {
+		string value = mass[index];
+		int i = 0;
+		for (i = value.length() - 1; i >= 0; i--)
+			if ((value[i] > 57) && (value[i] < 48))
+				break;
+		if (i < value.length())
+			value = value.erase(i, 1);
+		mass[index] = value;
+	}
 
 #pragma endregion
+/// //////////////////////////////////////////////////////////////////
 };
