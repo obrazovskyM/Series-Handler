@@ -1,3 +1,4 @@
+
 #pragma once
 #include <string>
 #include <sstream>
@@ -10,7 +11,7 @@ using namespace System;
 
 ref class Dataset {
 
-/// //////////////////////////////////////////////////////////////////
+	/// //////////////////////////////////////////////////////////////////
 
 #pragma region Init
 
@@ -22,9 +23,13 @@ public:
 		mass = new string[0];
 		length = 0;
 	}
+	~Dataset() {
+		delete[] mass;
+		mass = nullptr;
+	}
 #pragma endregion
 
-/// //////////////////////////////////////////////////////////////////
+	/// //////////////////////////////////////////////////////////////////
 
 #pragma region UI functions
 
@@ -51,8 +56,9 @@ public:
 		datamass = gcnew System::String(temp_arr.c_str());
 		return datamass;
 	}
-
 	void Clear() {
+		delete[] mass;
+		mass = nullptr;
 		length = 0;
 		mass = new string[0];
 		return;
@@ -60,7 +66,7 @@ public:
 
 #pragma endregion
 
-/// //////////////////////////////////////////////////////////////////
+	/// //////////////////////////////////////////////////////////////////
 
 #pragma region Procesing Functions
 
@@ -80,7 +86,7 @@ public:
 			for (int x = 0; x < mass[i].length(); x++) {
 				char smb = mass[i][x];
 				//if the smb is not number or latter*
-				if (/*1*/  !(  /*2*/  ((smb >= 48) && (smb <= 57)) || ((smb >= 65) && (smb <= 90)) || ((smb >= 97) && (smb <= 122))  /*2*/  )   /*1*/) {
+				if (/*1*/  !(  /*2*/  ((smb >= 48) && (smb <= 57)) || ((smb >= 65) && (smb <= 90)) || ((smb >= 97) && (smb <= 122))  /*2*/)   /*1*/) {
 					mass[i][x] = '~';
 				}
 			}
@@ -119,7 +125,7 @@ public:
 
 			string wordpath = mass[i];
 			wordpath = wordpath.erase(separator + 1, mass[i].length() - separator - 1);
-			
+
 			string numpath = mass[i];
 			numpath = numpath.erase(0, separator + 1);
 
@@ -127,7 +133,7 @@ public:
 				numpath.erase(0, 1);
 				wordpath = wordpath + "0";
 			}
-				
+
 
 			long long int numend = 0;
 			stringstream stream(numpath);
@@ -140,7 +146,7 @@ public:
 					if (new_dataset.mass[new_dataset.length - 1][separator + 1] == '0')
 						new_dataset.mass[new_dataset.length - 1] = new_dataset.mass[new_dataset.length - 1].erase(separator, 1);
 				}
-				
+
 			}
 			//check series
 			if (new_dataset.mass[new_dataset.length - 1] != mass[i + 1]) {
@@ -149,48 +155,61 @@ public:
 			}
 			//
 		}
-
+		delete[] mass;
 		mass = new_dataset.mass;
 		length = new_dataset.length;
+		new_dataset.mass = nullptr;
 
 		return;
 	}
 
 #pragma endregion
-/// //////////////////////////////////////////////////////////////////
+	/// //////////////////////////////////////////////////////////////////
 #pragma region Local functions
 
 private:
 
 	void Add(string value) {
-
+		 
 		string* temp_arr = new string[length + 1];
 
-		for (int i = 0; i < length; i++)
-			temp_arr[i] = mass[i];
+		try {
 
-		temp_arr[length] = value;
+			for (int i = 0; i < length; i++)
+				temp_arr[i] = mass[i];
 
-		mass = temp_arr;
-		length++;
-		return;
+			temp_arr[length] = value;
+
+			delete[] mass;
+			mass = temp_arr;
+			length++;
+			temp_arr = nullptr;
+		}
+
+		catch (...) {
+			delete[] temp_arr;
+		}
 	}
 	void Remove(int index) {
 
 		if (index >= length)
 			return;
-
 		string* temp_arr = new string[length - 1];
 
-		for (int i = 0; i < index; i++)
-			temp_arr[i] = mass[i];
+		try {
+			for (int i = 0; i < index; i++)
+				temp_arr[i] = mass[i];
+			for (int i = index + 1; i < length; i++)
+				temp_arr[i - 1] = mass[i];
 
-		for (int i = index + 1; i < length; i++)
-			temp_arr[i - 1] = mass[i];
-
-		mass = temp_arr;
-		length--;
-		return;
+			delete[] mass;
+			mass = temp_arr;
+			length--;
+			temp_arr = nullptr;
+		}
+		catch (...) {
+			delete[] temp_arr;
+		}
 	}
 	void Delempty() {
 		for (int i = 0; i < length; i++)
@@ -256,5 +275,5 @@ private:
 	}
 
 #pragma endregion
-/// //////////////////////////////////////////////////////////////////
+	/// //////////////////////////////////////////////////////////////////
 };
