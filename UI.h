@@ -1,7 +1,7 @@
 #pragma once
 #include "UI_result.h"
 #include "Dataset.h"
-#define version "v1.2"
+#define version "v1.3"
 
 namespace SeriesHandler {
 
@@ -17,9 +17,9 @@ namespace SeriesHandler {
 	public ref class UI : public System::Windows::Forms::Form
 	{
 	/// //////////////////////////////////////////////////////////////////
-	#pragma region Form base
+#pragma region Form base
 
-	private: 
+	private:
 		Dataset^ dataset;
 	public:
 		UI(void)
@@ -34,6 +34,7 @@ namespace SeriesHandler {
 			{
 				delete components;
 			}
+			delete dataset;
 		}
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::RichTextBox^ richTextBox1;
@@ -48,11 +49,11 @@ namespace SeriesHandler {
 
 
 	private:
-		System::ComponentModel::Container ^components;
+		System::ComponentModel::Container^ components;
 
 
-	#pragma endregion
-	/// //////////////////////////////////////////////////////////////////
+#pragma endregion
+		/// //////////////////////////////////////////////////////////////////
 
 
 		void InitializeComponent(void)
@@ -198,39 +199,39 @@ namespace SeriesHandler {
 			this->Margin = System::Windows::Forms::Padding(4);
 			this->MaximizeBox = false;
 			this->Name = L"UI";
-			this->Text = L"Series Handler " + version;
+			this->Text = L"Series Handler" + " " + version;
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
 
 
-	/// //////////////////////////////////////////////////////////////////
+		/// //////////////////////////////////////////////////////////////////
 
 
-private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
+	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
 
-	dataset->Write(this->richTextBox1->Text);
-	SeriesHandler::UI_result ui_result;
+		dataset->Write(this->richTextBox1->Text);
+		SeriesHandler::UI_result ui_result;
 
-	/// //////////////////////////////////////////////////////////////////
+		/// //////////////////////////////////////////////////////////////////
 
-	if (this->checkBox_cut->Checked)
-		dataset->Cut();
-	if (this->radioButton_extend->Checked)
-		dataset->Extend();
-	if (this->radioButton_merge->Checked)
-		dataset->Merge();
-	if (this->radioButton_delspc->Checked)
-		dataset->Delsmb();
+		if (this->checkBox_cut->Checked)
+			dataset->Cut();
+		if (this->radioButton_extend->Checked)
+			dataset->Extend();
+		if (this->radioButton_merge->Checked)
+			dataset->Merge();
+		if (this->radioButton_delspc->Checked)
+			dataset->Delsmb();
 
-	/// //////////////////////////////////////////////////////////////////
+		/// //////////////////////////////////////////////////////////////////
 
-	ui_result.write_result(dataset->Get());
-	dataset->Clear();
-	ui_result.ShowDialog();
-}
-private: System::Void checkBox_cut_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-}
-};
+		ui_result.write_result(dataset->Get());
+		dataset->Clear();
+		ui_result.ShowDialog();
+	}
+	private: System::Void checkBox_cut_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
+	}
+	};
 }
